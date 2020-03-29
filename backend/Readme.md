@@ -4,6 +4,9 @@
 
 **NeighbouhoodNews** is a web application that allows a user to stay in the loop with what is happening around their neighbourhood.
 
+## BDD
+
+
 ## installations
 
 These instructions will get you copy of this project up and running for local development and testing purposes.
@@ -84,7 +87,10 @@ python manage.py runserver
 
 - [Django](https://www.djangoproject.com/) - The web framework for perfectionists with deadlines.
 - [django-rest-framework](https://www.django-rest-framework.org/) - A powerful and flexible toolkit for building Web APIs.
-- [Bootstrap](https://getbootstrap.com/) - The world’s most popular framework for building responsive, mobile-first sites
+- [Bootstrap](https://getbootstrap.com/) - The world’s most popular framework for building responsive, mobile-first sites.
+
+## CODEBEAT
+
 
 ## Contributors
 [ AhmadSAshraf](https://github.com/AhmadSAshraf/Hood-News.git),
