@@ -13,7 +13,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 
 urlpatterns = [
-   path('api-auth/', obtain_auth_token),
+   path('api/auth/', obtain_auth_token),
    # path(TemplateView.as_view(template_name="home.html"), name="home"),
    path('api/hood/', views.NeighbourhoodList.as_view()),
 ]
