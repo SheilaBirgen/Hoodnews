@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from .models import Neighbourhood, Profile
+from .models import Neighbourhood, Profile,Business
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,7 +37,7 @@ class BusinessSerializer(serializers.ModelSerializer):
     bsn__name = serializers.CharField()
     User = serializers.CharField()
     bsn_email = serializers.CharField()
-    Neighbourhood_id=
+   
     class Meta:
         model = Business
         exclude = ['is_active', 'neighborhood', 'id', 'owner']

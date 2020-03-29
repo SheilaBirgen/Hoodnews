@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from .serializers import NeighbourhoodSerializer, ProfileSerializer, UserSerializer
+from .serializers import NeighbourhoodSerializer, ProfileSerializer, UserSerializer, BusinessSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .permissions import IsAdminOrReadOnly
@@ -8,6 +8,7 @@ from django.contrib.auth import login, logout
 from .models import *
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import IsAuthenticated
 
 # @csrf_exempt
 # def get_data(request):
