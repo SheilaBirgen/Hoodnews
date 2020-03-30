@@ -16,4 +16,8 @@ urlpatterns = [
    path('api/auth/', obtain_auth_token),
    # path(TemplateView.as_view(template_name="home.html"), name="home"),
    path('api/hood/', views.NeighbourhoodList.as_view()),
+   path('api/v1/profile/<int:pk>/<int:id>', views.ProfileList.as_view()),
+   path('api/v1/create_business/<int:pk>', views.CreateBusinessView.as_view()),
+   path('api/v1/post', views.CreatePostView.as_view()),
+   path('api/v1/create_business/<int:pk>', views.CreateDepartmentView.as_view()),
 ]

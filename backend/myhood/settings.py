@@ -44,11 +44,18 @@ INSTALLED_APPS = [
 
 ]
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     
+}
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

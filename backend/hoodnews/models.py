@@ -12,15 +12,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
-# Save Profile when saving a User
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     instance.Profile.save()
-    
-# @receiver(post_save, sender=User)
-# def create_hood_admin(sender, instance, created, **kwargs):
-#     if created:
-#         NeighbourhoodAdmin.objects.create(user=instance)
+    NeighbourhoodAdmin.objects.create(user=instance)
 
 
 class Neighbourhood(models.Model):

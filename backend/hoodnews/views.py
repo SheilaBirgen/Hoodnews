@@ -43,7 +43,7 @@ class UserList(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class Profile(APIView):
+class ProfileList(APIView):
     def get_queryset(self):
         queryset = Profile.objects.filter(user_id=self.kwargs["pk"])
         return queryset
@@ -60,7 +60,7 @@ class Profile(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class NeighbourhoodList(APIView):
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
     
     def get(self, request, format=None):
         hoods = Neighbourhood.objects.all()
@@ -97,6 +97,11 @@ class CreateBusinessView(APIView):
 
 class CreatePostView(APIView):
     permission_classes  = (IsAuthenticated,)
+
+    def get(self,request, format=None):
+        all_posts = Post.objects.all()
+        serializers = PostSerializer(all_posts, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
     def post(self, request, format=None):
         serializers = PostSerializer(data=request.data)
         if serializers.is_valid():
@@ -104,3 +109,24 @@ class CreatePostView(APIView):
             serializers.save(user=request.user)
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateDepartmentView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get_hood(self, pk):
+        try:
+            return Neighbourhood.objects.get(pk=pk)
+        except Neighbourhood.DoesNotExist:
+            return Http404
+    def get(self,request,pk, format=None):
+        department = Department.objects.filter(neighbourhood_id=pk)
+        serializers = DepartmentSerializer(department, many=True)
+        return Response(serializers.data,status=status.HTTP_200_OK)
+    
+    def post(self,request,pk,format=None):
+        hood = self.get_hood(pk)
+        serializers = DepartmentSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save(neighbourhood=hood)
+            return Response(serializers.data,status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
