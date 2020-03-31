@@ -129,4 +129,18 @@ class CreateDepartmentView(APIView):
             serializers.save(neighbourhood=hood)
             return Response(serializers.data,status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+class DeleteHood(generics.DestroyAPIView):
+    def destroy(self, request, *args, **kwargs):
+        system_admin = SystemAdmin.objects.get(pk=self.kwargs["id"])
+        if system_admin.is_admin:
+            try:
+                queryset = Neighbourhood.objects.get(pk=self.kwargs["pk"])
+            except ObjectDoesNotExist:
+                return Response({"Neighbourhood does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+            queryset.delete()
+            return Response({"Neighbourhood deleted"})
+
+        else:
+            return Response({"Not authorized"}, status=status.HTTP_400_BAD_REQUEST)
