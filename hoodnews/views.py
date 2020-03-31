@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .permissions import IsAdminOrReadOnly
 from django.contrib.auth import login, logout
 from .models import *
-from rest_framework import status
+from rest_framework import generics, status
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
 
@@ -58,6 +58,29 @@ class ProfileList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EditHoodInfo(generics.RetrieveUpdateAPIView):
+    def get_queryset(self):
+        queryset = Neighbourhood.objects.filter(pk=self.kwargs["pk"])
+        return queryset
+
+    serializer_class = NeighbourhoodSerializer
+
+    def put(self, request, *args, **kwargs):
+        system_admin = SystemAdmin.objects.get(pk=self.kwargs["id"])
+        if system_admin.is_admin:
+            hood = Neighbourhood.objects.get(pk=self.kwargs["pk"])
+            serializer = NeighbourhoodSerializer(hood, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response({"Not authorized"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class NeighbourhoodList(APIView):
     permission_classes = (IsAuthenticated,)
@@ -130,7 +153,7 @@ class CreateDepartmentView(APIView):
             return Response(serializers.data,status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class DeleteHood(generics.DestroyAPIView):
+class DeleteHood(generic.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         system_admin = SystemAdmin.objects.get(pk=self.kwargs["id"])
         if system_admin.is_admin:
