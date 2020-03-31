@@ -11,12 +11,10 @@ urlpatterns = [
    path('api/auth/', obtain_auth_token),
    path('api/hood/', views.NeighbourhoodList.as_view()),
    path("login/", LoginView.as_view(), name="login"),
-   path('all_users/', UserList.as_view(), name='all_users'),
    path('api/v1/profile/<int:pk>/<int:id>', views.ProfileList.as_view()),
    path('api/v1/create_business/<int:pk>', views.CreateBusinessView.as_view()),
    path('api/v1/post', views.CreatePostView.as_view()),
    path('api/v1/create_business/<int:pk>', views.CreateDepartmentView.as_view()),
-   path('admin/<int:id>/delete_user/<int:pk>/', DeleteUser.as_view(), name='delete_user'),
    path('admin/<int:id>/edit_hood_info/<int:pk>/', EditHoodInfo.as_view(), name="edit_hood_info"),
    path('admin/<int:id>/delete_hood/<int:pk>/', DeleteHood.as_view(), name="delete_hood"),
 ]

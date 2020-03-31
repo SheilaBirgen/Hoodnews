@@ -153,7 +153,7 @@ class CreateDepartmentView(APIView):
             return Response(serializers.data,status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class DeleteHood(generic.DestroyAPIView):
+class DeleteHood(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         system_admin = SystemAdmin.objects.get(pk=self.kwargs["id"])
         if system_admin.is_admin:
