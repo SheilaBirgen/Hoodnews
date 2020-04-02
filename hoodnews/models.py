@@ -4,17 +4,10 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save,post_delete
 from django.dispatch import receiver
 import datetime as dt
+from django.conf import settings
 
 
 # Create Profile when creating a User
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-
-    NeighbourhoodAdmin.objects.create(user=instance)
-
-
 class Neighbourhood(models.Model):
     name = models.CharField(max_length=64)
     location = models.CharField(max_length=64, null=True)
@@ -23,10 +16,14 @@ class Neighbourhood(models.Model):
     health_dpt = models.CharField(max_length=20)
     health_dpt_address = models.CharField(max_length=20)
     police_dpt_address = models.CharField(max_length=20)
-
+    occupants = models.IntegerField()
+    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     def __str__(self):
         return f' {self.name} Community'
-
+    def save_hood(self):
+        self.save()
+    def delete_hood(self):
+        self.delete()
 
     def get_absolute_url(self):
         return reverse('profile')
@@ -84,11 +81,23 @@ class User(models.Model):
         return f'{self.user.username} User'
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30, blank=True)
-    user_name = models.CharField(max_length=30,blank=True)
-    prof_pic = models.ImageField(upload_to= 'profiles/', blank=True,default="profile/a.jpg")
-    bio = models.CharField(max_length=800,default="Welcome Me!")
-
+    bio = models.TextField()
+    Neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE)
+    general_location = models.CharField(max_length=20)
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    
     def __str__(self):
         return f'{self.user.username} User'
+        
+    def save_profile(self):
+        self.save()
+    def delete_profile(self):
+        self.delete()
+    
+    @classmethod
+    def get_prof_id(cls, id):
+        profile = cls.objects.get(pk=id)
+        return profile
+    def update_bio(self, bio):
+        self.bio = bio
+        self.save()
