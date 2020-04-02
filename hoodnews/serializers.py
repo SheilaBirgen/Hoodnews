@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 class NeighbourhoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Neighbourhood
-        fields = ('name', 'location','created_by', 'police', 'health_dpt','health_dpt_address', 'police_dpt_address' )
+        fields = ('name', 'location','created_by', 'police', 'health_dpt','health_dpt_address', 'police_dpt_address','occupants' )
     
 
 
@@ -33,11 +33,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('user', 'name', 'status', 'prof_pic', 'location', 'neighbourhood')
 
-class BusinessSerializer(serializers.ModelSerializer):
-    bsn__name = serializers.CharField()
-    User = serializers.CharField()
-    bsn_email = serializers.CharField()
-   
+class BusinessSerializer(serializers.ModelSerializer):   
     class Meta:
         model = Business
-        exclude = ['is_active', 'neighborhood', 'id', 'owner']
+        exclude = ['bsn_name', 'Neighborhood_id', 'user', 'bsn_email']
