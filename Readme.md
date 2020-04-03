@@ -4,7 +4,11 @@
 
 **NeighbouhoodNews** is a web application that allows a user to stay in the loop with what is happening around their neighbourhood.
 
-## BDD
+## Deployed livelink backend
+https://hoodnewss.herokuapp.com
+
+## Deployed live link frontend
+
 
 
 ## installations
