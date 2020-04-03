@@ -16,8 +16,8 @@ class Neighbourhood(models.Model):
     health_dpt = models.CharField(max_length=20)
     health_dpt_address = models.CharField(max_length=20)
     police_dpt_address = models.CharField(max_length=20)
-    occupants = models.IntegerField()
-    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    occupants = models.IntegerField(default=0)
+    
     def __str__(self):
         return f' {self.name} Community'
     def save_hood(self):
@@ -46,7 +46,7 @@ class Neighbourhood(models.Model):
 
 class Business(models.Model):
     bsn_name = models.CharField(max_length=64, unique= True)
-    Neighbourhood_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    Neighbourhood_id = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     User = models.ForeignKey(Neighbourhood, null=True, on_delete=models.CASCADE)
     bsn_email = models.EmailField(max_length=64, unique= True) 
     
@@ -81,9 +81,9 @@ class User(models.Model):
         return f'{self.user.username} User'
 
 class Profile(models.Model):
-    bio = models.TextField()
-    Neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE)
-    general_location = models.CharField(max_length=20)
+    bio = models.TextField(max_length=50)
+    Neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE, null=True)
+    general_location = models.CharField(max_length=20, null=True)
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     
     def __str__(self):
