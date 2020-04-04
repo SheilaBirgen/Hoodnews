@@ -1,24 +1,24 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from .serializers import NeighbourhoodSerializer, ProfileSerializer, UserSerializer, BusinessSerializer
+from .serializers import NeighbourhoodSerializer, ProfileSerializer, UserSerializer, BusinessSerializer,DepartmentSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .permissions import IsAdminOrReadOnly
 from django.contrib.auth import login, logout
 from .models import *
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework import status
 
-class LoginView(APIView):
+
+class RegisterUser(APIView):
     permission_classes = ()
 
     def post(self, request, ):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        user = authenticate(username=username, password=password)
-        if user:
-            return Response({"token": user.auth_token.key})
-        else:
-            return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
+        serializers = UserSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data,status=status.HTTP_201_CREATED)
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserList(APIView):
@@ -51,21 +51,22 @@ class NeighbourhoodList(APIView):
 
 class CreateBusinessView(APIView):
     permission_classes = (IsAuthenticated,)
-    def get_hood(self, pk):
+    def get_business(self):
         try:
-            return Neighbourhood.objects.get(pk=pk)
+            return Business.objects.all()
         except Neighbourhood.DoesNotExist:
             return Http404
-    def get(self,request,pk, format=None):
-        businesses = Business.objects.filter(neighbourhood_id=pk)
-        serializers = BusinessSerializer(businesses, many=True)
-        return Response(serializers.data,status=status.HTTP_200_OK)
        
-    def post(self, request, pk, format=None):
-        hood = self.get_hood(pk)
+       # gets all businesses
+    def get(self,request, format=None):
+        biz = self.get_business()
+        serializers = BusinessSerializer(biz, many=True)
+        return Response(serializers.data)
+       
+    def post(self, request, format=None):
         serializers = BusinessSerializer(data=request.data)
         if serializers.is_valid():
-            serializers.save(user=request.user,neighbourhood=hood)
+            serializers.save()
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -86,21 +87,21 @@ class CreatePostView(APIView):
 
 class CreateDepartmentView(APIView):
     permission_classes = (IsAuthenticated,)
-    def get_hood(self, pk):
+    def get_department(self):
         try:
-            return Neighbourhood.objects.get(pk=pk)
+            return Department.objects.all()
         except Neighbourhood.DoesNotExist:
             return Http404
-    def get(self,request,pk, format=None):
-        department = Department.objects.filter(neighbourhood_id=pk)
-        serializers = DepartmentSerializer(department, many=True)
+        #gets all departments
+    def get(self,request, format=None):
+        dept = self.get_department()
+        serializers = DepartmentSerializer(dept, many=True)
         return Response(serializers.data,status=status.HTTP_200_OK)
     
-    def post(self,request,pk,format=None):
-        hood = self.get_hood(pk)
+    def post(self,request,format=None):
         serializers = DepartmentSerializer(data=request.data)
         if serializers.is_valid():
-            serializers.save(neighbourhood=hood)
+            serializers.save()
             return Response(serializers.data,status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
