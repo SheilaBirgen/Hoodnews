@@ -20,9 +20,10 @@ from rest_framework import routers
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include("hoodnews.urls")),
     path('api-token-auth/', obtain_jwt_token),
     path('api-token-refresh/', refresh_jwt_token),
+    path('admin/', admin.site.urls),
+    path('', include("hoodnews.urls")),
+   
    
 ]
