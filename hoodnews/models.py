@@ -1,10 +1,10 @@
 from django.db import models
-from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save,post_delete
 from django.dispatch import receiver
 import datetime as dt
 from django.conf import settings
+
 
 
 # Create Profile when creating a User
@@ -43,7 +43,7 @@ class Neighbourhood(models.Model):
 
 class Business(models.Model):
     bsn_name = models.CharField(max_length=64, unique= True)
-    Neighbourhood_id = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
+    neighbourhood_id = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     User = models.ForeignKey(Neighbourhood, null=True, on_delete=models.CASCADE)
     bsn_email = models.EmailField(max_length=64, unique= True) 
     
