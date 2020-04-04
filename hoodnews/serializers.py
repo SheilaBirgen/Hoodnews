@@ -1,30 +1,21 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from .models import Neighbourhood, Profile,Business,User
+from .models import Neighbourhood, Profile,Business,User,Department
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
 
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-
-        user.set_password(validated_data['password'])
-        user.save()
-        Token.objects.create(user=user)
-        return user
+    def validate_password(self, value: str) -> str:
+        return make_password(value)
 
 
 class NeighbourhoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Neighbourhood
-        fields = ('name', 'location','created_by', 'police', 'health_dpt','health_dpt_address', 'police_dpt_address','occupants' )
+        fields = ('name', 'location','created_by' ,'occupants' )
     
 
 
@@ -36,4 +27,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 class BusinessSerializer(serializers.ModelSerializer):   
     class Meta:
         model = Business
-        exclude = ['bsn_name', 'Neighborhood_id', 'user', 'bsn_email']
+        fields = ['bsn_name', 'bsn_email']
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['police', 'health_dpt', 'health_dpt_address', 'police_dpt_address', 'neighbourhood']
