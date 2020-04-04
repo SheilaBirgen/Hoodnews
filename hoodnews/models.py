@@ -12,12 +12,9 @@ class Neighbourhood(models.Model):
     name = models.CharField(max_length=64)
     location = models.CharField(max_length=64, null=True)
     created_by =  models.CharField(max_length=64, null=True)
-    police = models.CharField(max_length=20)
-    health_dpt = models.CharField(max_length=20)
-    health_dpt_address = models.CharField(max_length=20)
-    police_dpt_address = models.CharField(max_length=20)
     occupants = models.IntegerField(default=0)
     
+
     def __str__(self):
         return f' {self.name} Community'
     def save_hood(self):
@@ -77,18 +74,16 @@ class User(models.Model):
     email = models.EmailField(max_length=30)
     id = models.PositiveIntegerField(primary_key=True)
     status = models.CharField(max_length=200)
-    def __str__(self):
-        return f'{self.user.username} User'
+    
 
 class Profile(models.Model):
     bio = models.TextField(max_length=50)
-    Neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE, null=True)
+    neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE, null=True)
     general_location = models.CharField(max_length=20, null=True)
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    
     def __str__(self):
-        return f'{self.user.username} User'
-        
+        return self.username
+            
     def save_profile(self):
         self.save()
     def delete_profile(self):
@@ -100,4 +95,15 @@ class Profile(models.Model):
         return profile
     def update_bio(self, bio):
         self.bio = bio
+        self.save()
+
+class Department(models.Model):
+    police = models.CharField(max_length=20)
+    health_dpt = models.CharField(max_length=20)
+    health_dpt_address = models.CharField(max_length=20)
+    police_dpt_address = models.CharField(max_length=20)
+    neighbourhood= models.ForeignKey(Neighbourhood,on_delete=models.CASCADE)
+
+
+    def save_dept(self):
         self.save()
